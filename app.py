@@ -146,7 +146,9 @@ def delete(sno):
 
 if __name__ == "__main__":
     # db.create_all() 
-    app.debug = True
+    # app.debug = True
     # app.run(host="0.0.0.0", port=8000)
     serve(app, host="0.0.0.0", port=8000)
     
+# CSS3 Loading animations 
+# https://codepen.io/Manoz/pen/kyWvQw
