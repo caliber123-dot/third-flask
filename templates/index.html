@@ -40,6 +40,7 @@
                         <tbody>
               {% for todo in allTodo %}
               <tr>
+                <!-- {{loop.title}} -->
                 <th scope="row">{{loop.index}}</th>
                 <td>{{todo.title}}</td>
                 <td>{{todo.desc}}</td>

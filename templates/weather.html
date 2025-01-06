@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %} Home{% endblock title %} 
+{% block body %}
+<div class="container">
+    <h4>This is Weather Report by City Name :</h4>
+    <hr>
+    Weather City for - <b>{{city_name}}</b> || Date : <b>{{date_time}}</b>
+    <hr>
+    <!-- print ("Current Temperature is: {:.2f} deg C".format(temp_city))
+    {{ "Hello, {:.2f} deg C".format(temp_city) }} -->
+    Current Temperature is : <b>{{ "{:.2f} deg C".format(temp_city) }}</b> <br>
+    Current Temperature is : <b>{{ "{:.2f} deg C".format(temp_feels) }}</b> <br>
+
+    Current Weather description is: <b>{{weather_desc}}</b><br>
+    Current Humidity is           : <b>{{hmdt}} %</b><br>
+    Current wind speed is         : <b>{{wind_spd}} kmph</b><br>
+    <hr>
+
+</div>
+
+{% endblock body %}
