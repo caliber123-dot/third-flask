@@ -63,7 +63,7 @@ def delete(sno):
     return redirect("/")
 
 if __name__ == "__main__":
-    db.create_all()    
+    db.create_all() 
     # app.debug = True
     # app.run(host="0.0.0.0", port=8000)
     serve(app, host="0.0.0.0", port=8000)
