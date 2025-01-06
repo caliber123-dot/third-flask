@@ -1,9 +1,50 @@
 {% extends 'base.html' %}
 {% block title %} Home{% endblock title %} 
 {% block body %}
+<!-- ##### JS START ####-->
+ <!--Jquery run file  -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+ <!-- Bootstrap js-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- Texllate js -->
+<!-- <script src="texllate/jquery.fittext.js"></script>
+<script src="texllate/jquery.lettering.js"></script>
+<script src="texllate/jquery.textillate.js"></script> -->
+
+<!-- Siri wave -->
+<script src="https://unpkg.com/siriwave/dist/siriwave.umd.min.js"></script>
+
+<!-- static\js\main_2.js -->
+<!-- <script src="{{ url_for('static', filename='js/main_2.js') }}"></script> -->
+<!-- <script src="static/js/main_2.js"></script> -->
+<script type="text/javascript">
+    $(document).ready(function() {
+    $("#chatbox").keypress(function (e) {
+    //   $('#form').on('submit',function(e){
+        if(e.keyCode == 13){
+        $.ajax({
+          data : {
+            firstname : $('#chatbox').val(),
+            // lastname : $('#txtlog').val(),
+          },
+          type : 'POST',
+          url : '/myfun'
+        })
+        .done(function(data){
+          $('#txtlog').text(data.output).show();
+        });
+        e.preventDefault();
+        // alert("Inside");
+    }
+      });
+    });
+</script>
+ 
+
+<!-- #### JS END #### -->
 <div class="container">
-    <h4>This is Weather Report by City Name :</h4>
-    <hr>
+    <!-- <h6>This is Weather Report by City Name :</h6>-->
+    <hr> 
     Weather City for - <b>{{city_name}}</b> || Date : <b>{{date_time}}</b>
     <hr>
     <!-- print ("Current Temperature is: {:.2f} deg C".format(temp_city))
@@ -12,10 +53,42 @@
     Current Temperature is : <b>{{ "{:.2f} deg C".format(temp_feels) }}</b> <br>
 
     Current Weather description is: <b>{{weather_desc}}</b><br>
-    Current Humidity is           : <b>{{hmdt}} %</b><br>
-    Current wind speed is         : <b>{{wind_spd}} kmph</b><br>
+    <!-- Current Humidity is           : <b>{{hmdt}} %</b><br>
+    Current wind speed is         : <b>{{wind_spd}} kmph</b><br> -->
+    
+    <!-- AI Assistant Code here .. -->
+    <script>
+        function myFunction() {
+          window.open("https://www.youtube.com/watch?v=HtMF973tXIY\\u0026pp=ygUUUGxheSBOYXRpb25hbCBBbnRoZW0%3D", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=100,left=400,width=600,height=500");
+        }
+    </script>
+    <form id="form">
+    <h5 class="my-3">DELTA AI : CHAT ASSISTANT PROJECT FOR BCA</h5>
     <hr>
+    <div class="form-group mb-3">
+        <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction1()">Write a code</button>
+        <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction1()">Weather Report</button>
+        <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction1()">Send Email</button>
+        <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction1()">Open File</button>
+        <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction()">Open Music</button>
+        
+    </div>
+    
+    <div class="row mb-3">
+        <div class="form-group mb-2">
+            <input type="text" class="form-control" name="chatbox" id="chatbox" onkeyup="doc_keyUp(event,this)" placeholder="type here ...">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="txtlog" name="txtlog" rows="8"></textarea>
+          </div>
+          <!-- <button type="submit" name="button">Submit</button> -->
+          <div class="form-group">
+            <div id="output"></div>
+         </div>
 
+    </div>
+    </form>
+    
 </div>
 
 {% endblock body %}

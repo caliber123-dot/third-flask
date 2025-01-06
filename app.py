@@ -1,8 +1,12 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from waitress import serve
 import requests
+import time
+# import eel
+from huggingface_hub import InferenceClient
+import json
 
 app = Flask(__name__)
 
@@ -20,14 +24,67 @@ class Todo(db.Model):
         return f"{self.sno} - {self.title}"
 
 #######Start Code Here ############
+def call_chatBot(inference_client: InferenceClient, prompt: str):
+    response = inference_client.post(
+        json={
+            "inputs": prompt,
+            "parameters": {"max_new_tokens": 1000},
+            "task": "text-generation",
+        },
+    )
+    return json.loads(response.decode())[0]["generated_text"]
+@app.route('/myfun', methods=['GET','POST'])
+def index():
+    # print("---INSIDE Flask---")
+    # print(request.method)
+    if request.method == "POST":
+        # print("Hiii")
+        query = request.form['firstname']
+        # lastname = request.form['lastname']
+        print(query)
+        # output = firstname + lastname
+        output = query
+        if query:
+            import os
+            os.environ["HF_TOKEN"] = "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"
+            model_1 = "microsoft/Phi-3.5-mini-instruct"
+            repo_id = model_1
+            My_client = InferenceClient(model=repo_id, timeout=120,)
+            response = call_chatBot(My_client, query)
+            # print (response)        
+            return jsonify({'output':response})
+        return jsonify({'error' : 'Error!'})
+    return render_template('weather.html')
+
+# @eel.expose
+def take_text_cmd(query):
+    if "play" in query.lower():     
+        print('Playing on Youtube....')  
+        # eel.DisplayMessage("Playing on Youtube....") 
+        time.sleep(3)                      
+        import pywhatkit as kit
+        a = kit.playonyt(query)
+        print(a)
+    elif "test" in query.lower():
+        # eel.DisplayMessage(query) 
+        print("----")
+    print("Bye! Bye!")
 def GetWeather(city_name):    
     API_Key = "c819be33968724a0e04121b1d3795584"
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_Key}'
     response = requests.get(url)
     return response
 
+@app.route('/update_label', methods=['POST'])
+def update_label():
+    value = request.form.get('value')
+    # Process the received value here (e.g., store it in a database)
+    print("Received value:", value)
+    return 'OK'
+
 @app.route("/weather")
 def weather():
+    # take_text_cmd("Play National Anthem")
     city_name = "Nagpur"
     response = GetWeather(city_name)
     if response.status_code == 200:
