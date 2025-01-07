@@ -41,8 +41,12 @@ def index():
         print(query)
         # output = query
         if len(query.strip()) > 0:  
-            response = take_cmd(query)
-            return jsonify({'output':response})
+            try:
+                response = take_cmd(query)
+                return jsonify({'output':response})
+            except Exception as e:
+                print("The error is: ",e)
+                return jsonify({'output':e})
         else:
             return jsonify({'output':""})
         return jsonify({'error' : 'Error!'})
