@@ -67,7 +67,9 @@ def take_cmd(query):
         print('Playing on Youtube....')   
         # time.sleep(3)                      
         import pywhatkit as kit
-        response = kit.playonyt(query, open_video=False)
+        # response = kit.playonyt(query, open_video=False)
+        a = kit.playonyt(query, open_video=True)
+        response = "Okay"
         print(response) 
     else:
         import os
