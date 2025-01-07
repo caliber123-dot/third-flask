@@ -68,11 +68,11 @@ def take_cmd(query):
         # time.sleep(3)                      
         import pywhatkit as kit
         # response = kit.playonyt(query, open_video=False)
-        print("A1")
+        print("A11")
         a = kit.playonyt(query, use_api=True)
         print(a)
         # response = "Okay"
-        print("A2") 
+        print("A22") 
     else:
         import os
         os.environ["HF_TOKEN"] = "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"
