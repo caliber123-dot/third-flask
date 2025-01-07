@@ -28,14 +28,23 @@
         document.getElementById("dload").style.display = "block";
         $.ajax({
           data: {
-            firstname: $('#chatbox').val(),
+            query: $('#chatbox').val(),
             // lastname : $('#txtlog').val(),
           },
           type: 'POST',
           url: '/myfun'
         })
           .done(function (data) {
-            $('#txtlog').text(data.output).show();
+            // var playt = $('#chatbox').val().toLowerCase()
+            // alert(data.output);
+            if (data.output.includes("youtube.com")) {
+              console.log("Music found!");
+              $('#txtlog').val("Playing on Youtube....");
+              myFunction(data.output);              
+            } else {
+              console.log("Music not found!");
+              $('#txtlog').text(data.output).show();
+            }           
             document.getElementById("dload").style.display = "none";
           });
         e.preventDefault();
@@ -44,7 +53,11 @@
     });
   });
 </script>
-
+<script>
+  function myFunction(mCtr) {
+    window.open(mCtr, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=100,left=400,width=600,height=500");
+  }
+</script>
 
 <!-- #### JS END #### -->
 
@@ -63,11 +76,7 @@
     Current wind speed is         : <b>{{wind_spd}} kmph</b><br> -->
 
   <!-- AI Assistant Code here .. -->
-  <script>
-    function myFunction() {
-      window.open("https://www.youtube.com/watch?v=HtMF973tXIY\\u0026pp=ygUUUGxheSBOYXRpb25hbCBBbnRoZW0%3D", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=100,left=400,width=600,height=500");
-    }
-  </script>
+
   <form id="form">
     <h5 class="my-3">DELTA AI : CHAT ASSISTANT PROJECT FOR BCA</h5>
     <hr>
@@ -86,21 +95,22 @@
       </div>
     </div>
     <div class="form-group mb-3">
-      <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction1()">Write a code</button>
-      <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction1()">Weather Report</button>
-      <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction1()">Send Email</button>
-      <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction1()">Open File</button>
-      <button type="button" class="btn btn-success btn-sm mx-1" onclick="myFunction()">Open Music</button>
+      <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()">Write a code</button>
+      <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()">Weather Report</button>
+      <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()">Send Email</button>
+      <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()">Open File</button>
+      <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()" ><i class="bi bi-volume-up"></i> Listen</button>
 
     </div>
 
     <div class="row mb-3">
       <div class="form-group mb-2">
         <input type="text" class="form-control" name="chatbox" id="chatbox" onkeyup="doc_keyUp(event,this)"
-          placeholder="type here ...">
+          placeholder="type here ..." style="font-size: 15px;font-weight: 500;">
       </div>
       <div class="form-group">
-        <textarea class="form-control" id="txtlog" name="txtlog" rows="8"></textarea>
+        <textarea class="form-control" id="txtlog" name="txtlog" rows="8"
+          style="font-size: 15px;font-weight: 400;background-color: black;color: white;"></textarea>
       </div>
       <!-- <button type="submit" name="button">Submit</button> -->
       <div class="form-group">

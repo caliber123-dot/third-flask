@@ -35,40 +35,58 @@ def call_chatBot(inference_client: InferenceClient, prompt: str):
     return json.loads(response.decode())[0]["generated_text"]
 @app.route('/myfun', methods=['GET','POST'])
 def index():
-    # print("---INSIDE Flask---")
-    # print(request.method)
     if request.method == "POST":
-        # print("Hiii")
-        query = request.form['firstname']
+        query = request.form['query']
         # lastname = request.form['lastname']
         print(query)
-        # output = firstname + lastname
-        output = query
-        if query:
-            import os
-            os.environ["HF_TOKEN"] = "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"
-            model_1 = "microsoft/Phi-3.5-mini-instruct"
-            repo_id = model_1
-            My_client = InferenceClient(model=repo_id, timeout=120,)
-            response = call_chatBot(My_client, query)
-            # print (response)        
+        # output = query
+        if len(query.strip()) > 0:  
+            response = take_cmd(query)
             return jsonify({'output':response})
+        else:
+            return jsonify({'output':""})
         return jsonify({'error' : 'Error!'})
     return render_template('weather.html')
 
-# @eel.expose
-def take_text_cmd(query):
-    if "play" in query.lower():     
-        print('Playing on Youtube....')  
-        # eel.DisplayMessage("Playing on Youtube....") 
-        time.sleep(3)                      
+def take_cmd(query):
+    a1 = ["hello", "namaskar", "namaste", "namskar" , "namste", "salam"]
+    a2 = ["who r u", "who r u?" , "w r u", "who are you", "who are you?"]
+    response = ""
+    if any(x in query.lower() for x in a1) or query.lower() == "hi":
+        # print(query)
+        response = "Hello! I'm DeltaAI, How can I assist you today?"
+        time.sleep(2)   
+    elif any(x in query.lower() for x in a2):
+        response ="I'm DeltaAI, your friendly AI assistant! I can help with answering questions, brainstorming ideas, learning new topics, writing, coding, and much more. What's on your mind?" 
+        time.sleep(2)  
+    elif "play" in query.lower():     
+        print('Playing on Youtube....')   
+        # time.sleep(3)                      
         import pywhatkit as kit
-        a = kit.playonyt(query)
-        print(a)
-    elif "test" in query.lower():
-        # eel.DisplayMessage(query) 
-        print("----")
-    print("Bye! Bye!")
+        response = kit.playonyt(query, open_video=False)
+        print(response) 
+    else:
+        import os
+        os.environ["HF_TOKEN"] = "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"
+        model_1 = "microsoft/Phi-3.5-mini-instruct"
+        repo_id = model_1
+        My_client = InferenceClient(model=repo_id, timeout=120,)
+        response = call_chatBot(My_client, query)
+    return response
+
+# @eel.expose
+# def take_text_cmd(query):
+#     if "play" in query.lower():     
+#         print('Playing on Youtube....')  
+#         # eel.DisplayMessage("Playing on Youtube....") 
+#         time.sleep(3)                      
+#         import pywhatkit as kit
+#         a = kit.playonyt(query)
+#         print(a)
+#     elif "test" in query.lower():
+#         # eel.DisplayMessage(query) 
+#         print("----")
+#     print("Bye! Bye!")
 def GetWeather(city_name):    
     API_Key = "c819be33968724a0e04121b1d3795584"
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_Key}'
@@ -98,7 +116,9 @@ def weather():
         visibility = ((api_data['visibility']) / 1000)
         pressure = api_data['main']['pressure']
         clouds = api_data['clouds']['all']
-        date_time = datetime.now().strftime("%d %b %Y | %I:%M:%S %p")
+        import pytz
+        india_timezone = pytz.timezone('Asia/Kolkata')
+        date_time = datetime.now(india_timezone).strftime("%d %b %Y | %I:%M:%S %p")
         
     return render_template('weather.html',temp_city=temp_city,city_name=city_name,
                            date_time=date_time,temp_feels=temp_feels,weather_desc=weather_desc,
