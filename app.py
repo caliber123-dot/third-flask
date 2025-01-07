@@ -69,7 +69,8 @@ def take_cmd(query):
         import pywhatkit as kit
         # response = kit.playonyt(query, open_video=False)
         print("A1")
-        a = kit.playonyt(query, open_video=True)
+        a = kit.playonyt(query, use_api=True ,open_video=False)
+        print(a)
         # response = "Okay"
         print("A2") 
     else:
