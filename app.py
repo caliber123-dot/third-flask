@@ -64,15 +64,17 @@ def take_cmd(query):
         response ="I'm DeltaAI, your friendly AI assistant! I can help with answering questions, brainstorming ideas, learning new topics, writing, coding, and much more. What's on your mind?" 
         time.sleep(2)  
     elif "play" in query.lower():     
-        print('Playing on Youtube....')   
+        print('Playing on Youtube....')  
+        topic = query.lower().replace('play ', '')
+        response = playonyt(topic) 
         # time.sleep(3)                      
-        import pywhatkit as kit
+        # import pywhatkit as kit
         # response = kit.playonyt(query, open_video=False)
-        print("A11")
-        a = kit.playonyt(query, use_api=True)
-        print(a)
+        # print("A11")
+        # a = kit.playonyt(query, use_api=True)
+        # print(a)
         # response = "Okay"
-        print("A22") 
+        # print("A22") 
     else:
         import os
         os.environ["HF_TOKEN"] = "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"
@@ -82,19 +84,23 @@ def take_cmd(query):
         response = call_chatBot(My_client, query)
     return response
 
-# @eel.expose
-# def take_text_cmd(query):
-#     if "play" in query.lower():     
-#         print('Playing on Youtube....')  
-#         # eel.DisplayMessage("Playing on Youtube....") 
-#         time.sleep(3)                      
-#         import pywhatkit as kit
-#         a = kit.playonyt(query)
-#         print(a)
-#     elif "test" in query.lower():
-#         # eel.DisplayMessage(query) 
-#         print("----")
-#     print("Bye! Bye!")
+def playonyt(topic):
+    # """Will play video on following topic, takes about 10 to 15 seconds to load"""
+    url = 'https://www.youtube.com/results?q=' + topic
+    print(url)
+    count = 0
+    cont = requests.get(url)
+    data = str(cont.content)
+    lst = data.split('"')
+    for i in lst:
+        count+=1
+        if i == 'WEB_PAGE_TYPE_WATCH':
+            break
+    if lst[count-5] == "/results":
+        raise Exception("No video found.")
+    # web.open("https://www.youtube.com"+lst[count-5])
+    return "https://www.youtube.com"+lst[count-5]
+
 def GetWeather(city_name):    
     API_Key = "c819be33968724a0e04121b1d3795584"
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_Key}'
