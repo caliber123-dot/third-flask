@@ -61,12 +61,14 @@
             // alert(data.output);
             if (data.output.includes("youtube.com")) {
               console.log("Music found!");
-              $('#txtlog').val("Playing on Youtube....");
+              $('#txtlog').text("Playing on Youtube....");
+              $("#divspeak").text("Playing on Youtube.");
+              speak('div.intro');
               myFunction(data.output);              
             } else {
               console.log("Text found!");
-              $("#divspeak").text(data.output);
               $('#txtlog').text(data.output).show();
+              $("#divspeak").text(data.output);
               speak('div.intro');
             }           
             document.getElementById("dload").style.display = "none";
