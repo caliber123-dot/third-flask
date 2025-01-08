@@ -18,6 +18,28 @@
 <!-- static\js\main_2.js -->
 <!-- <script src="{{ url_for('static', filename='js/main_2.js') }}"></script> -->
 <!-- <script src="static/js/main_2.js"></script> -->
+<!-- Lightweight-jQuery-Based-Text-To-Speech -->
+<!-- static/js/articulate.js -->
+<script src="static/js/articulate.js"></script>
+<script>
+  function speak(obj) {
+    // var text = $('#txtlog').val();
+    $(obj).articulate('speak');
+  };
+  
+  function pause() {
+    $().articulate('pause');
+  };
+  
+  function resume() {
+    $().articulate('resume');
+  };
+  
+  function stop() {
+    $().articulate('stop');
+  };
+  </script>
+
 <!-- CSS3 Loading animations -->
 <link rel="stylesheet" href="static/css/load.css">
 <script type="text/javascript">
@@ -42,8 +64,10 @@
               $('#txtlog').val("Playing on Youtube....");
               myFunction(data.output);              
             } else {
-              console.log("Music not found!");
+              console.log("Text found!");
+              $("#divspeak").text(data.output);
               $('#txtlog').text(data.output).show();
+              speak('div.intro');
             }           
             document.getElementById("dload").style.display = "none";
           });
@@ -94,21 +118,30 @@
         </div>
       </div>
     </div>
+    
+    
     <div class="form-group mb-3">
       <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()">Write a code</button>
       <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()">Weather Report</button>
       <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()">Send Email</button>
       <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()">Open File</button>
-      <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="myFunction1()" ><i class="bi bi-volume-up"></i> Listen</button>
-
+      <div class="btn-group bg-primary " role="group" aria-label="Basic mixed styles example">
+      <button type="button" class="btn btn-success btn-sm" title="Speak" onclick="speak('div.intro')"><i class="bi bi-play-fill"></i></button>
+      <button type="button" class="btn btn-warning btn-sm" title="Pause" onclick="pause()"><i class="bi bi-pause-fill"></i> </button>
+      <button type="button" class="btn btn-primary btn-sm" title="Resume" onclick="resume()" ><i class="bi bi-clock" style="font-size: inherit;"></i> </button>
+      <button type="button" class="btn btn-danger btn-sm" title="Stop" onclick="stop()"><i class="bi bi-stop-fill"></i> </button>
     </div>
-
+  </div>
+    
+    <div id="divspeak" class="intro" style="display: none;">
+      <h2>jQuery Articulate.js Demo 2</h2>
+    </div>
     <div class="row mb-3">
       <div class="form-group mb-2">
         <input type="text" class="form-control" name="chatbox" id="chatbox" onkeyup="doc_keyUp(event,this)"
           placeholder="type here ..." style="font-size: 15px;font-weight: 500;">
       </div>
-      <div class="form-group">
+      <div>
         <textarea class="form-control" id="txtlog" name="txtlog" rows="8"
           style="font-size: 15px;font-weight: 400;background-color: black;color: white;"></textarea>
       </div>

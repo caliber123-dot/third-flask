@@ -4,7 +4,7 @@ from datetime import datetime
 from waitress import serve
 import requests
 import time
-# import eel
+# import pyttsx3
 from huggingface_hub import InferenceClient
 import json
 
@@ -24,6 +24,18 @@ class Todo(db.Model):
         return f"{self.sno} - {self.title}"
 
 #######Start Code Here ############
+# def speakAI(text):
+#     engine = pyttsx3.init()
+#     engine.say(text)
+#     engine.runAndWait()
+# def speak(text):    
+#     engine = pyttsx3.init('sapi5')
+#     voices = engine.getProperty('voices') 
+#     engine.setProperty('voice', voices[1].id)   
+#     # engine.setProperty('rate', 125) 
+#     engine.setProperty('rate', 160) 
+#     engine.say(text)    
+#     engine.runAndWait()
 def call_chatBot(inference_client: InferenceClient, prompt: str):
     response = inference_client.post(
         json={
@@ -66,15 +78,7 @@ def take_cmd(query):
     elif "play" in query.lower():     
         print('Playing on Youtube....')  
         topic = query.lower().replace('play ', '')
-        response = playonyt(topic) 
-        # time.sleep(3)                      
-        # import pywhatkit as kit
-        # response = kit.playonyt(query, open_video=False)
-        # print("A11")
-        # a = kit.playonyt(query, use_api=True)
-        # print(a)
-        # response = "Okay"
-        # print("A22") 
+        response = playonyt(topic)  
     else:
         import os
         os.environ["HF_TOKEN"] = "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"
