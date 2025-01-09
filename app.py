@@ -181,6 +181,21 @@ def delete(sno):
     db.session.delete(todo)
     db.session.commit()
     return redirect("/")
+from model import predictDisease
+predictions = predictDisease("Continuous Sneezing,Shivering,Chills") # >>Allergy
+
+rf_prediction = predictions['rf_model_prediction']
+nb_prediction = predictions['naive_bayes_prediction']
+svm_prediction = predictions['svm_model_prediction']
+final_prediction = predictions['final_prediction']
+print ("-------------------------------------------------------------")
+              
+print("RandomForest Prediction  :", rf_prediction)
+print("Gaussian_NB Prediction   :", nb_prediction)
+print("SVC Prediction           :", svm_prediction)
+print ("-------------------------------------------------------------")
+print("Final Prediction         :", final_prediction)
+print ("-------------------------------------------------------------")
 
 if __name__ == "__main__":
     # db.create_all() 
