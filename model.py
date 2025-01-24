@@ -1,4 +1,8 @@
 # Importing libraries
+print("Start-1")
+from datetime import datetime
+date_time = datetime.now().strftime("%d %b %Y | %I:%M:%S %p")
+print(date_time)
 import numpy as np
 import pandas as pd
 from scipy.stats import mode
@@ -15,9 +19,12 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 # Reading the train.csv by removing the 
 # last column since it's an empty column
 # dataset
+print("S-1")
+date_time2 = datetime.now().strftime("%d %b %Y | %I:%M:%S %p")
+print(date_time2)
 DATA_PATH = "dataset/Training.csv"
 data = pd.read_csv(DATA_PATH).dropna(axis = 1)
-
+print("S-2")
 # Checking whether the dataset is balanced or not
 disease_counts = data["prognosis"].value_counts()
 # df = pandas.DataFrame([features])
@@ -41,7 +48,7 @@ X = data.iloc[:,:-1]
 y = data.iloc[:, -1]
 X_train, X_test, y_train, y_test =train_test_split(
   X, y, test_size = 0.2, random_state = 24)
-
+print("S-3")
 # print(f"Train: {X_train.shape}, {y_train.shape}")
 # print(f"Test: {X_test.shape}, {y_test.shape}")
 
@@ -131,20 +138,22 @@ final_rf_model = RandomForestClassifier(random_state=18)
 final_svm_model.fit(X.values, y)
 final_nb_model.fit(X.values, y)
 final_rf_model.fit(X.values, y)
-
+print("F-1")
 # Reading the test data
 # Back\dataset\Testing.csv
 test_data = pd.read_csv("dataset/Testing.csv").dropna(axis=1)
 
 test_X = test_data.iloc[:, :-1]
 test_Y = encoder.transform(test_data.iloc[:, -1])
-
+print("F-2")
 # Making prediction by take mode of predictions 
 # made by all the classifiers
 svm_preds = final_svm_model.predict(test_X.values)
 nb_preds = final_nb_model.predict(test_X.values)
 rf_preds = final_rf_model.predict(test_X.values)
-
+print("F-3")
+date_time3 = datetime.now().strftime("%d %b %Y | %I:%M:%S %p")
+print(date_time3)
 # !pip install scipy
 from scipy import stats
 
@@ -152,13 +161,13 @@ final_preds = [stats.mode([i,j,k])[0] for i,j,k in zip(svm_preds, nb_preds, rf_p
 
 print(f"Accuracy on Test dataset by the combined model: {accuracy_score(test_Y, final_preds)*100}")
 
-cf_matrix = confusion_matrix(test_Y, final_preds)
-plt.figure(figsize=(12,8))
+# cf_matrix = confusion_matrix(test_Y, final_preds)
+# plt.figure(figsize=(12,8))
 
-sns.heatmap(cf_matrix, annot = True)
-plt.title("Confusion Matrix for Combined Model on Test Dataset")
+# sns.heatmap(cf_matrix, annot = True)
+# plt.title("Confusion Matrix for Combined Model on Test Dataset")
 # plt.show()
-
+print("F-4")
 # This code is modified by Susobhan Akhuli
 # ######### Creating a function that can take symptoms as input and generate predictions for disease 
 
@@ -180,6 +189,7 @@ data_dict = {
 # Input: string containing symptoms separated by commas
 # Output: Generated predictions by models
 def predictDisease(symptoms):
+    print("P-1") 
     symptoms = symptoms.split(",")
     
     # creating input data for the models
@@ -197,6 +207,9 @@ def predictDisease(symptoms):
     svm_prediction = data_dict["predictions_classes"][final_svm_model.predict(input_data)[0]]
     # making final prediction by taking mode of all predictions
     # Use statistics.mode instead of scipy.stats.mode
+    print("P-2") 
+    date_time4 = datetime.now().strftime("%d %b %Y | %I:%M:%S %p")
+    print(date_time4)
     import statistics
     final_prediction = statistics.mode([rf_prediction, nb_prediction, svm_prediction])
     predictions = {

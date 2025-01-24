@@ -7,13 +7,15 @@ import time
 # import pyttsx3
 from huggingface_hub import InferenceClient
 import json
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-app.app_context().push()
+# app.app_context().push()
 class Todo(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
@@ -23,19 +25,18 @@ class Todo(db.Model):
     def __repr__(self) -> str:
         return f"{self.sno} - {self.title}"
 
-#######Start Code Here ############
-# def speakAI(text):
-#     engine = pyttsx3.init()
-#     engine.say(text)
-#     engine.runAndWait()
-# def speak(text):    
-#     engine = pyttsx3.init('sapi5')
-#     voices = engine.getProperty('voices') 
-#     engine.setProperty('voice', voices[1].id)   
-#     # engine.setProperty('rate', 125) 
-#     engine.setProperty('rate', 160) 
-#     engine.say(text)    
-#     engine.runAndWait()
+# Initialize the database
+@app.route('/init_db')
+def init_db():
+    try:
+        with app.app_context():
+            db.create_all()
+            print("Tables created!")
+            return "<h1>Tables created successfully!</h1>", 200
+    except Exception as e:
+        return f"Error creating Tables: {str(e)}", 500
+
+
 def call_chatBot(inference_client: InferenceClient, prompt: str):
     response = inference_client.post(
         json={
@@ -80,9 +81,11 @@ def take_cmd(query):
         topic = query.lower().replace('play ', '')
         response = playonyt(topic)  
     else:
-        import os
-        os.environ["HF_TOKEN"] = "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"
-        model_1 = "microsoft/Phi-3.5-mini-instruct"
+        # import os
+        load_dotenv() # Load variables from .env file
+        api_key = os.getenv('HF_TOKEN')
+        model_1 = os.getenv('MODEL_1') 
+        os.environ["HF_TOKEN"] = api_key
         repo_id = model_1
         My_client = InferenceClient(model=repo_id, timeout=120,)
         response = call_chatBot(My_client, query)
@@ -106,7 +109,8 @@ def playonyt(topic):
     return "https://www.youtube.com"+lst[count-5]
 
 def GetWeather(city_name):    
-    API_Key = "c819be33968724a0e04121b1d3795584"
+    load_dotenv() # Load variables from .env file
+    API_Key = os.getenv('API_Key') 
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_Key}'
     response = requests.get(url)
     return response
@@ -181,24 +185,27 @@ def delete(sno):
     db.session.delete(todo)
     db.session.commit()
     return redirect("/")
-from model import predictDisease
-predictions = predictDisease("Continuous Sneezing,Shivering,Chills") # >>Allergy
 
-rf_prediction = predictions['rf_model_prediction']
-nb_prediction = predictions['naive_bayes_prediction']
-svm_prediction = predictions['svm_model_prediction']
-final_prediction = predictions['final_prediction']
-print ("-------------------------------------------------------------")
+# from model import predictDisease
+# predictions = predictDisease("itching,skin_rash,nodal_skin_eruptions")
+# predictions = predictDisease("Itching,Skin Rash,Nodal Skin Eruptions") # >>Fungal infection
+# predictions = predictDisease("Continuous Sneezing,Shivering,Chills") # >>Allergy
+# predictions = predictDisease("Shivering,Continuous Sneezing,Chills") # >>Allergy
+
+# rf_prediction = predictions['rf_model_prediction']
+# nb_prediction = predictions['naive_bayes_prediction']
+# svm_prediction = predictions['svm_model_prediction']
+# final_prediction = predictions['final_prediction']
+# print ("-------------------------------------------------------------")
               
-print("RandomForest Prediction  :", rf_prediction)
-print("Gaussian_NB Prediction   :", nb_prediction)
-print("SVC Prediction           :", svm_prediction)
-print ("-------------------------------------------------------------")
-print("Final Prediction         :", final_prediction)
-print ("-------------------------------------------------------------")
+# print("RandomForest Prediction  :", rf_prediction)
+# print("Gaussian_NB Prediction   :", nb_prediction)
+# print("SVM Prediction           :", svm_prediction)
+# print ("-------------------------------------------------------------")
+# print("Final Prediction         :", final_prediction)
+# print ("-------------------------------------------------------------")
 
 if __name__ == "__main__":
-    # db.create_all() 
     # app.debug = True
     # app.run(host="0.0.0.0", port=8000)
     serve(app, host="0.0.0.0", port=8000)

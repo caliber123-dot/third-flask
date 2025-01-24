@@ -1,2 +1,5 @@
 env
+.env
+instance/user.todo.db
+instance/todo.db
 __pycache__
